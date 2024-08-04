@@ -19,6 +19,7 @@
 * Add GoogleTest via CMake
 * Add Git semver
 * Add clang-format
+* Add support for llvm coverage
 * Add docs-as-code (Sphinx?)
 * Add pipelines
   * GitHub: docs/format/build/test
