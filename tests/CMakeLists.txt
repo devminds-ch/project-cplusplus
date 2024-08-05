@@ -1,6 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(
   googletest
+  DOWNLOAD_EXTRACT_TIMESTAMP
   URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -14,16 +15,18 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(GCOV_LINK gcov)
 endif()
 
-add_executable(${PROJECT_NAME}_GoogleTest
-  ../src/calculate.cpp
+add_executable(calculate_test
   calculate_test.cpp
 )
-target_link_libraries(${PROJECT_NAME}_GoogleTest PRIVATE
-  ${GCOV_LINK}
-  gtest
-  gmock
-  gmock_main
+
+target_link_libraries(calculate_test
+  PRIVATE
+    calculate
+    ${GCOV_LINK}
+    gtest
+    gmock
+    gmock_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME}_GoogleTest)
+gtest_discover_tests(calculate_test)

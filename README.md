@@ -14,7 +14,7 @@
 
 ## TODO
 
-* Add dummy project incl. submodule (e.g. Eigen)
+* Add dummy project incl. submodule
 * Add devcontainer
 * Add GoogleTest via CMake
 * Add Git semver
