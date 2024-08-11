@@ -1,4 +1,4 @@
-# [devminds](https://devminds.ch) C++ Project Template
+# C++ Project Template by [devminds GmbH](https://devminds.ch)
 
 ## Directory structure
 
