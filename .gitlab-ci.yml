@@ -1,0 +1,18 @@
+---
+stages:
+  - build
+
+build:
+  stage: build
+  image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
+  before_script:
+    - git submodule update --init --recursive
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 week
