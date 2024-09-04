@@ -37,6 +37,9 @@ build-unit-tests:
       - build/
     expire_in: 1 week
 
+code_quality:
+  when: manual
+
 run-unit-tests:
   stage: test
   before_script:
