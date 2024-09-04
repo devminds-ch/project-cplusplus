@@ -14,6 +14,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(CMAKE_BUILD_TYPE STREQUAL "PROFILE")
+  # Setup code coverage for GCC
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Enabling code coverage for gcc")
+    set(CMAKE_CXX_FLAGS_PROFILE --coverage)
+    set(GCOV_LINK gcov)
+  endif()
+endif()
+
 add_subdirectory(external/CLI11)
 add_subdirectory(src)
 
