@@ -1,8 +1,9 @@
 ---
 stages:
   - build
+  - test
 
-build:
+build-project:
   stage: build
   image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
   before_script:
@@ -11,8 +12,23 @@ build:
     - mkdir build
     - cd build
     - cmake ..
-    - make
+    - make cplusplus_training_project
   artifacts:
     paths:
-      - build/
+      - build/bin
+    expire_in: 1 week
+
+build-unit-tests:
+  stage: build
+  image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
+  before_script:
+    - git submodule update --init --recursive
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DENABLE_UNIT_TESTS=ON ..
+    - make calculate_test
+  artifacts:
+    paths:
+      - build/bin
     expire_in: 1 week
