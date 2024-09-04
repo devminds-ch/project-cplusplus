@@ -52,27 +52,27 @@ pipeline {
         }
         stage('Build project') {
             steps {
-                sh 'cmake -DCMAKE_BUILD_TYPE=Release -S . -B build'
-                sh 'cmake --build build --target cplusplus_training_project'
+                sh 'cmake --preset default'
+                sh 'cmake --build --preset default --target cplusplus_training_project'
                 archiveArtifacts(
-                    artifacts: 'build/bin/cplusplus_training_project',
+                    artifacts: 'build/default/bin/cplusplus_training_project',
                     onlyIfSuccessful: true
                 )
             }
         }
         stage('Build tests') {
             steps {
-                sh 'cmake -DCMAKE_BUILD_TYPE=PROFILE -S . -B build'
-                sh 'cmake --build build --target calculate_test'
+                sh 'cmake --preset coverage'
+                sh 'cmake --build --preset coverage --target calculate_test'
                 archiveArtifacts(
-                    artifacts: 'build/bin/calculate_test',
+                    artifacts: 'build/coverage/bin/calculate_test',
                     onlyIfSuccessful: true
                 )
             }
         }
         stage('Run tests') {
             steps {
-                sh './build/bin/calculate_test --gtest_output="xml:report.xml"'
+                sh './build/coverage/bin/calculate_test --gtest_output="xml:report.xml"'
                 // Create Cobertura coverage report
                 sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage.xml"'
                 // Create HTML coverage report
