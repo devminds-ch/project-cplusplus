@@ -8,13 +8,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Setup code coverage for GCC
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  message(STATUS "Enabling code coverage for gcc")
-  add_compile_options("--coverage")
-  set(GCOV_LINK gcov)
-endif()
-
 add_executable(calculate_test
   calculate_test.cpp
 )
@@ -22,7 +15,6 @@ add_executable(calculate_test
 target_link_libraries(calculate_test
   PRIVATE
     calculate
-    ${GCOV_LINK}
     gtest
     gmock
     gmock_main

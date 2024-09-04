@@ -1,4 +1,4 @@
-# C++ Project Template by [devminds GmbH](https://devminds.ch)
+# C++ Training Project by [devminds GmbH](https://devminds.ch)
 
 ## Directory structure
 
@@ -14,8 +14,8 @@
 
 ## TODO
 
+* Add CMakePresets.json
 * Add support for llvm coverage
-* Add docs-as-code (Sphinx?)
 * Add pipelines
   * GitHub: docs/format/build/test
   * GitLab: docs/format/build/test/coverage
