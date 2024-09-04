@@ -1,11 +1,16 @@
 ---
+default:
+  image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
+
 stages:
   - build
   - test
 
+include:
+   - template: Jobs/Code-Quality.gitlab-ci.yml
+
 build-project:
   stage: build
-  image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
   before_script:
     - git submodule update --init --recursive
   script:
@@ -20,7 +25,6 @@ build-project:
 
 build-unit-tests:
   stage: build
-  image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
   before_script:
     - git submodule update --init --recursive
   script:
@@ -35,7 +39,6 @@ build-unit-tests:
 
 run-unit-tests:
   stage: test
-  image: mcr.microsoft.com/devcontainers/cpp:1-debian-12
   before_script:
     - apt update && apt install -y gcovr
   script:
@@ -44,6 +47,7 @@ run-unit-tests:
     - gcovr -f ../src -f ../tests --xml-pretty  --exclude-unreachable-branches --print-summary -o "coverage_report.xml" --root ${CI_PROJECT_DIR}
   coverage: /^\s*lines:\s*\d+.\d+\%/
   artifacts:
+    expire_in: 1 week
     reports:
       junit: build/test_report.xml
       coverage_report:
