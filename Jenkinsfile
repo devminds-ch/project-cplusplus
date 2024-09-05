@@ -9,7 +9,7 @@ pipeline {
         }
     }
     //options {
-    //    skipDefaultCheckout()
+    //    skipDefaultCheckout() // default checkout is required for .devcontainer/Dockerfile
     //}
     stages {
         stage('Cleanup') {
@@ -19,14 +19,14 @@ pipeline {
         }
         stage('Checkout') {
             steps {
-                sh 'git submodule update --init --recursive'
-                //checkout(
-                //    scmGit(
-                //        branches: [[name: env.BRANCH_NAME]],
-                //        extensions: [submodule(recursiveSubmodules: true, reference: '')],
-                //        userRemoteConfigs: [[url: FIXME !!!]]
-                //    )
-                //)
+                //sh 'git submodule update --init --recursive'
+                checkout(
+                    scmGit(
+                        branches: scm.branches,
+                        extensions: [submodule(recursiveSubmodules: true, reference: '')],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                    )
+                )
             }
         }
         stage('Static code analysis') {
