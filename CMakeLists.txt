@@ -15,11 +15,13 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "PROFILE")
-  # Setup code coverage for GCC
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    message(STATUS "Enabling code coverage for gcc")
+  # Enable code coverage for GCC and Clang
+  if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
+    message(STATUS "Enabling code coverage")
     set(CMAKE_CXX_FLAGS_PROFILE --coverage)
-    set(GCOV_LINK gcov)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+      set(GCOV_LINK gcov)
+    endif()
   endif()
 endif()
 
