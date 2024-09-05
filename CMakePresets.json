@@ -7,43 +7,117 @@
     },
     "configurePresets": [
         {
-            "name": "default",
-            "displayName": "Default Config",
-            "description": "Default build using Ninja generator",
+            "name": "release",
+            "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
             "name": "coverage",
-            "inherits": "default",
+            "hidden": true,
             "displayName": "Coverage Config",
             "description": "Coverage build using Ninja generator",
             "binaryDir": "${sourceDir}/build/coverage",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "PROFILE"
             }
+        },
+        {
+            "name": "gcc",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "clang",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "gcc-release",
+            "inherits": [
+                "gcc",
+                "release"
+            ],
+            "binaryDir": "${sourceDir}/build/gcc-release"
+        },
+        {
+            "name": "gcc-coverage",
+            "inherits": [
+                "gcc",
+                "coverage"
+            ],
+            "binaryDir": "${sourceDir}/build/gcc-coverage"
+        },
+        {
+            "name": "clang-release",
+            "inherits": [
+                "clang",
+                "release"
+            ],
+            "binaryDir": "${sourceDir}/build/clang-release"
+        },
+        {
+            "name": "clang-coverage",
+            "inherits": [
+                "clang",
+                "coverage"
+            ],
+            "binaryDir": "${sourceDir}/build/clang-coverage"
         }
     ],
     "buildPresets": [
         {
-            "name": "default",
-            "configurePreset": "default"
+            "name": "gcc-release",
+            "configurePreset": "gcc-release"
         },
         {
-            "name": "coverage",
-            "configurePreset": "coverage"
+            "name": "gcc-coverage",
+            "configurePreset": "gcc-coverage"
+        },
+        {
+            "name": "clang-release",
+            "configurePreset": "clang-release"
+        },
+        {
+            "name": "clang-coverage",
+            "configurePreset": "clang-coverage"
         }
     ],
     "testPresets": [
         {
-            "name": "default",
-            "configurePreset": "default",
+            "name": "test-default",
+            "hidden": true,
             "output": {
                 "outputOnFailure": true
             }
+        },
+        {
+            "name": "gcc-release",
+            "inherits": "test-default",
+            "configurePreset": "gcc-release"
+        },
+        {
+            "name": "gcc-coverage",
+            "inherits": "test-default",
+            "configurePreset": "gcc-coverage"
+        },
+        {
+            "name": "clang-release",
+            "inherits": "test-default",
+            "configurePreset": "clang-release"
+        },
+        {
+            "name": "clang-coverage",
+            "inherits": "test-default",
+            "configurePreset": "clang-coverage"
         }
     ]
 }
