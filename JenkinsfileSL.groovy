@@ -64,39 +64,12 @@ node {
             def tests = [:]
             compilers.each { c ->
                 tests[c] = {
-                    stage("Run tests [${c}]") {
-                        sh "./build/${c}-coverage/bin/calculate_test --gtest_output='xml:report-${c}.xml'"
-                        // Create Cobertura coverage report
-                        def gcov_executable = c == 'gcc' ? 'gcov' : 'llvm-cov gcov'
-                        sh "gcovr --gcov-executable '${gcov_executable}' -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o 'coverage-${c}.xml'"
-
-                        if (c == "gcc") {
-                            // Create HTML coverage report
-                            sh 'mkdir -p gcov'
-                            sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "gcov/index.html"'
-                            publishHTML([
-                                allowMissing: false,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: false,
-                                reportDir: 'gcov',
-                                reportFiles: 'index.html',
-                                reportName: 'Coverage HTML',
-                                reportTitles: '',
-                                useWrapperFileDirectly: true
-                            ])
-                            junit(
-                                testResults: "report-${c}.xml"
-                            )
-                        }
-                        def coverage_name = c == 'gcc' ? 'GCC' : 'Clang'
-                        recordCoverage(
-                            name: "${coverage_name} Coverage",
-                            tools: [
-                                [parser: 'JUNIT', pattern: "report-${c}.xml"],
-                                [parser: 'COBERTURA', pattern: "coverage-${c}.xml"]
-                            ]
-                        )
-                    }
+                    def gcov_executable = c == 'gcc' ? 'gcov' : 'llvm-cov gcov'
+                    stageRunTests(
+                        run: "./build/${c}-coverage/bin/calculate_test",
+                        name: "Calculate test [${c}]",
+                        gcov_executable: gcov_executable
+                    )
                 }
             }
             parallel tests
