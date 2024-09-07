@@ -1,3 +1,7 @@
+@Library('my-shared-library@main') _
+
+log.info 'Starting...'
+
 node {
     stage('Checkout SCM') {
         checkout(
@@ -17,7 +21,6 @@ node {
         stage('Cleanup') {
             sh 'rm -rf build'
         }
-
         stage('Static code analysis') {
             warnError('clang-format issues found') {
                 sh './tools/clang-format.sh'
@@ -42,6 +45,17 @@ node {
             def builds = [:]
             compilers.each { c ->
                 builds[c] = {
+                    stageCMakeBuild(
+                        preset: "${c}-release",
+                        target: 'cplusplus_training_project',
+                        artifacts: "build/${c}-release/bin/cplusplus_training_project"
+                    )
+                    stageCMakeBuild(
+                        preset: "${c}-coverage",
+                        target: 'calculate_test',
+                        artifacts: "build/${c}-coverage/bin/calculate_test"
+                    )
+                    /*
                     stage("Build project [${c}]") {
                         sh "cmake --preset ${c}-release"
                         sh "cmake --build --preset ${c}-release --target cplusplus_training_project"
@@ -58,6 +72,7 @@ node {
                             onlyIfSuccessful: true
                         )
                     }
+                    */
                 }
             }
             parallel builds
