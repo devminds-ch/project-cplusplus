@@ -14,8 +14,6 @@
 
 ## TODO
 
-* Add CMakePresets.json
-* Add support for llvm coverage
 * Add pipelines
   * GitHub: docs/format/build/test
   * GitLab: docs/format/build/test/coverage
