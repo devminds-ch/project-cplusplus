@@ -68,28 +68,12 @@ node {
                 tests[c] = {
                     stage("Run tests [${c}]") {
                         sh "./build/${c}-coverage/bin/calculate_test --gtest_output='xml:report-${c}.xml'"
+                        junit(
+                            testResults: "report-${c}.xml"
+                        )
                         // Create Cobertura coverage report
                         def gcov_executable = c == 'gcc' ? 'gcov' : 'llvm-cov gcov'
                         sh "gcovr --gcov-executable '${gcov_executable}' -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o 'coverage-${c}.xml'"
-
-                        if (c == "gcc") {
-                            // Create HTML coverage report
-                            sh 'mkdir -p gcov'
-                            sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "gcov/index.html"'
-                            publishHTML([
-                                allowMissing: false,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: false,
-                                reportDir: 'gcov',
-                                reportFiles: 'index.html',
-                                reportName: 'Coverage HTML',
-                                reportTitles: '',
-                                useWrapperFileDirectly: true
-                            ])
-                            junit(
-                                testResults: "report-${c}.xml"
-                            )
-                        }
                         def coverage_name = c == 'gcc' ? 'GCC' : 'Clang'
                         recordCoverage(
                             name: "${coverage_name} Coverage",
@@ -99,6 +83,19 @@ node {
                                 [parser: 'COBERTURA', pattern: "coverage-${c}.xml"]
                             ]
                         )
+                        // Create HTML coverage report
+                        sh "mkdir -p build/gcov-html-${c}"
+                        sh "gcovr --gcov-executable '${gcov_executable}' -f src . --root ./ --exclude-unreachable-branches --html --html-details -o 'build/gcov-html-${c}/index.html'"
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: false,
+                            reportDir: "build/gcov-html-${c}",
+                            reportFiles: 'index.html',
+                            reportName: "${coverage_name} Coverage HTML",
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                        ])
                     }
                 }
             }

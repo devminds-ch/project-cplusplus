@@ -87,24 +87,11 @@ pipeline {
                 stage('Run tests [gcc]') {
                     steps {
                         sh './build/gcc-coverage/bin/calculate_test --gtest_output="xml:report-gcc.xml"'
-                        // Create Cobertura coverage report
-                        sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-gcc.xml"'
-                        // Create HTML coverage report
-                        sh 'mkdir -p gcov'
-                        sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "gcov/index.html"'
-                        publishHTML([
-                            allowMissing: false,
-                            alwaysLinkToLastBuild: false,
-                            keepAll: false,
-                            reportDir: 'gcov',
-                            reportFiles: 'index.html',
-                            reportName: 'Coverage HTML',
-                            reportTitles: '',
-                            useWrapperFileDirectly: true
-                        ])
                         junit(
                             testResults: 'report-gcc.xml'
                         )
+                        // Create Cobertura coverage report
+                        sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-gcc.xml"'
                         recordCoverage(
                             name: 'GCC Coverage',
                             id: 'gcc-coverage',
@@ -113,11 +100,27 @@ pipeline {
                                 [parser: 'COBERTURA', pattern: 'coverage-gcc.xml']
                             ]
                         )
+                        // Create HTML coverage report
+                        sh 'mkdir -p build/gcov-html-gcc'
+                        sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-gcc/index.html"'
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: false,
+                            reportDir: 'build/gcov-html-gcc',
+                            reportFiles: 'index.html',
+                            reportName: 'GCC Coverage HTML',
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                        ])
                     }
                 }
                 stage('Run tests [clang]') {
                     steps {
                         sh './build/clang-coverage/bin/calculate_test --gtest_output="xml:report-clang.xml"'
+                        junit(
+                            testResults: 'report-clang.xml'
+                        )
                         // Create Cobertura coverage report
                         sh 'gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-clang.xml"'
                         recordCoverage(
@@ -128,6 +131,19 @@ pipeline {
                                 [parser: 'COBERTURA', pattern: 'coverage-clang.xml']
                             ]
                         )
+                        // Create HTML coverage report
+                        sh 'mkdir -p build/gcov-html-clang'
+                        sh 'gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-clang/index.html"'
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: false,
+                            reportDir: 'build/gcov-html-clang',
+                            reportFiles: 'index.html',
+                            reportName: 'Clang Coverage HTML',
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                        ])
                     }
                 }
             }
