@@ -93,6 +93,7 @@ node {
                         def coverage_name = c == 'gcc' ? 'GCC' : 'Clang'
                         recordCoverage(
                             name: "${coverage_name} Coverage",
+                            id: "${c}-coverage",
                             tools: [
                                 [parser: 'JUNIT', pattern: "report-${c}.xml"],
                                 [parser: 'COBERTURA', pattern: "coverage-${c}.xml"]

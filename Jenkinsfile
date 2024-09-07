@@ -107,6 +107,7 @@ pipeline {
                         )
                         recordCoverage(
                             name: 'GCC Coverage',
+                            id: 'gcc-coverage',
                             tools: [
                                 [parser: 'JUNIT', pattern: 'report-gcc.xml'],
                                 [parser: 'COBERTURA', pattern: 'coverage-gcc.xml']
@@ -121,6 +122,7 @@ pipeline {
                         sh 'gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-clang.xml"'
                         recordCoverage(
                             name: 'Clang Coverage',
+                            id: 'clang-coverage',
                             tools: [
                                 [parser: 'JUNIT', pattern: 'report-clang.xml'],
                                 [parser: 'COBERTURA', pattern: 'coverage-clang.xml']
