@@ -1,3 +1,7 @@
+@Library('my-shared-library@main') _
+
+log.info 'Starting...'
+
 node {
     stage('Checkout SCM') {
         checkout(
@@ -41,22 +45,16 @@ node {
             def builds = [:]
             compilers.each { c ->
                 builds[c] = {
-                    stage("Build project [${c}]") {
-                        sh "cmake --preset ${c}-release"
-                        sh "cmake --build --preset ${c}-release --target cplusplus_training_project"
-                        archiveArtifacts(
-                            artifacts: "build/${c}-release/bin/cplusplus_training_project",
-                            onlyIfSuccessful: true
-                        )
-                    }
-                    stage("Build tests [${c}]") {
-                        sh "cmake --preset ${c}-coverage"
-                        sh "cmake --build --preset ${c}-coverage --target calculate_test"
-                        archiveArtifacts(
-                            artifacts: "build/${c}-coverage/bin/calculate_test",
-                            onlyIfSuccessful: true
-                        )
-                    }
+                    stageCMakeBuild(
+                        preset: "${c}-release",
+                        target: 'cplusplus_training_project',
+                        artifacts: "build/${c}-release/bin/cplusplus_training_project"
+                    )
+                    stageCMakeBuild(
+                        preset: "${c}-coverage",
+                        target: 'calculate_test',
+                        artifacts: "build/${c}-coverage/bin/calculate_test"
+                    )
                 }
             }
             parallel builds
