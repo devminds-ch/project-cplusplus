@@ -82,7 +82,7 @@ node {
                                 keepAll: false,
                                 reportDir: 'gcov',
                                 reportFiles: 'index.html',
-                                reportName: 'Coverage',
+                                reportName: 'Coverage HTML',
                                 reportTitles: '',
                                 useWrapperFileDirectly: true
                             ])
