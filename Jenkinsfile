@@ -50,7 +50,7 @@ pipeline {
                 )
             }
         }
-        stage('Build Project') {
+        stage('Parallel build') {
             matrix {
                 axes {
                     axis {
@@ -82,9 +82,9 @@ pipeline {
                 }
             }
         }
-        stage('Parallel Tests') {
+        stage('Parallel test execution') {
             parallel {
-                stage('Run tests with gcc') {
+                stage('Run tests [gcc]') {
                     steps {
                         sh './build/gcc-coverage/bin/calculate_test --gtest_output="xml:report-gcc.xml"'
                         // Create Cobertura coverage report
@@ -92,16 +92,6 @@ pipeline {
                         // Create HTML coverage report
                         sh 'mkdir -p gcov'
                         sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "gcov/index.html"'
-                        junit(
-                            testResults: 'report-gcc.xml'
-                        )
-                        recordCoverage(
-                            name: 'GCC Coverage',
-                            tools: [
-                                [parser: 'JUNIT', pattern: 'report-gcc.xml'],
-                                [parser: 'COBERTURA', pattern: 'coverage-gcc.xml']
-                            ]
-                        )
                         publishHTML([
                             allowMissing: false,
                             alwaysLinkToLastBuild: false,
@@ -112,9 +102,19 @@ pipeline {
                             reportTitles: '',
                             useWrapperFileDirectly: true
                         ])
+                        junit(
+                            testResults: 'report-gcc.xml'
+                        )
+                        recordCoverage(
+                            name: 'GCC Coverage',
+                            tools: [
+                                [parser: 'JUNIT', pattern: 'report-gcc.xml'],
+                                [parser: 'COBERTURA', pattern: 'coverage-gcc.xml']
+                            ]
+                        )
                     }
                 }
-                stage('Run tests with clang') {
+                stage('Run tests [clang]') {
                     steps {
                         sh './build/clang-coverage/bin/calculate_test --gtest_output="xml:report-clang.xml"'
                         // Create Cobertura coverage report
