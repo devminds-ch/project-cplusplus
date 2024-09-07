@@ -67,9 +67,9 @@ node {
             compilers.each { c ->
                 tests[c] = {
                     stage("Run tests [${c}]") {
-                        sh "./build/${c}-coverage/bin/calculate_test --gtest_output='xml:report-${c}.xml'"
+                        sh "./build/${c}-coverage/bin/calculate_test --gtest_output='xml:test-report-${c}.xml'"
                         junit(
-                            testResults: "report-${c}.xml"
+                            testResults: "test-report-${c}.xml"
                         )
                         // Create Cobertura coverage report
                         def gcov_executable = c == 'gcc' ? 'gcov' : 'llvm-cov gcov'

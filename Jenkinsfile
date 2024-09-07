@@ -86,9 +86,9 @@ pipeline {
             parallel {
                 stage('Run tests [gcc]') {
                     steps {
-                        sh './build/gcc-coverage/bin/calculate_test --gtest_output="xml:report-gcc.xml"'
+                        sh './build/gcc-coverage/bin/calculate_test --gtest_output="xml:test-report-gcc.xml"'
                         junit(
-                            testResults: 'report-gcc.xml'
+                            testResults: 'test-report-gcc.xml'
                         )
                         // Create Cobertura coverage report
                         sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-gcc.xml"'
@@ -117,9 +117,9 @@ pipeline {
                 }
                 stage('Run tests [clang]') {
                     steps {
-                        sh './build/clang-coverage/bin/calculate_test --gtest_output="xml:report-clang.xml"'
+                        sh './build/clang-coverage/bin/calculate_test --gtest_output="xml:test-report-clang.xml"'
                         junit(
-                            testResults: 'report-clang.xml'
+                            testResults: 'test-report-clang.xml'
                         )
                         // Create Cobertura coverage report
                         sh 'gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-clang.xml"'
