@@ -1,4 +1,7 @@
 node {
+    properties([
+        disableConcurrentBuilds()
+    ])
     stage('Checkout SCM') {
         checkout(
             scmGit(

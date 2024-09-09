@@ -8,9 +8,14 @@ pipeline {
             dir '.'
         }
     }
-    //options {
-    //    skipDefaultCheckout() // default checkout is required for .devcontainer/Dockerfile
-    //}
+    options {
+        disableConcurrentBuilds()
+        //skipDefaultCheckout() // default checkout is required for .devcontainer/Dockerfile
+        //newContainerPerStage()
+    }
+    parameters {
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Flag indicating if tests should be executed')
+    }
     stages {
         stage('Cleanup') {
             steps {
@@ -83,6 +88,12 @@ pipeline {
             }
         }
         stage('Parallel test execution') {
+            when {
+                expression {
+                    params.RUN_TESTS == true
+                }
+            }
+
             parallel {
                 stage('Run tests [gcc]') {
                     steps {

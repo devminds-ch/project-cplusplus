@@ -14,6 +14,7 @@
 
 ## TODO
 
+* Add options/parameters/when
 * Add pipelines
   * GitHub: docs/format/build/test
   * GitLab: docs/format/build/test/coverage

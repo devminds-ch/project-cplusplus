@@ -3,6 +3,12 @@
 log.info 'Starting...'
 
 node {
+    properties([
+        disableConcurrentBuilds(),
+        parameters([
+            booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Flag indicating if tests should be executed')
+        ])
+    ])
     stage('Checkout SCM') {
         checkout(
             scmGit(
@@ -61,18 +67,20 @@ node {
         }
         stage('Parallel test execution')
         {
-            def tests = [:]
-            compilers.each { c ->
-                tests[c] = {
-                    def gcov_executable = c == 'gcc' ? 'gcov' : 'llvm-cov gcov'
-                    stageRunTests(
-                        run: "./build/${c}-coverage/bin/calculate_test",
-                        name: "Calculate test [${c}]",
-                        gcov_executable: gcov_executable
-                    )
+            when(params.RUN_TESTS) {
+                def tests = [:]
+                compilers.each { c ->
+                    tests[c] = {
+                        def gcov_executable = c == 'gcc' ? 'gcov' : 'llvm-cov gcov'
+                        stageRunTests(
+                            run: "./build/${c}-coverage/bin/calculate_test",
+                            name: "Calculate test [${c}]",
+                            gcov_executable: gcov_executable
+                        )
+                    }
                 }
+                parallel tests
             }
-            parallel tests
         }
     }
 }
