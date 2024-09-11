@@ -14,7 +14,7 @@
 
 ## TODO
 
-* Add options/parameters/when
+* Record compiler warnings for gcc/clang builds
 * Add pipelines
   * GitHub: docs/format/build/test
   * GitLab: docs/format/build/test/coverage
