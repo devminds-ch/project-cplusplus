@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[]) {
     // Parse CLI arguments using https://github.com/CLIUtils/CLI11
-    CLI::App app{"C++ Demo Application"};
+    CLI::App app{"C++ Training Project"};
     argv = app.ensure_utf8(argv);
     app.require_subcommand(1);
 
