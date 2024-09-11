@@ -20,8 +20,13 @@ node {
     }
     stage('Agent Setup') {
         // https://www.jenkins.io/doc/book/pipeline/docker/
-        customImage = docker.build("jenkins-cplusplus:latest",
-                                    "-f .devcontainer/Dockerfile ./")
+        docker.withRegistry('http://registry.lan:5000') {
+            customImage = docker.build(
+                "jenkins-cplusplus:latest",
+                "-f .devcontainer/Dockerfile ./")
+            // Push custom image to the own registry
+            customImage.push()
+        }
     }
     customImage.inside {
         stage('Cleanup') {
