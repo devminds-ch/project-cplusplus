@@ -6,7 +6,11 @@ node {
     properties([
         disableConcurrentBuilds(),
         parameters([
-            booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Flag indicating if tests should be executed')
+            booleanParam(
+                name: 'RUN_TESTS',
+                defaultValue: true,
+                description: 'Flag indicating if tests should be executed'
+            )
         ])
     ])
     stage('Checkout SCM') {
