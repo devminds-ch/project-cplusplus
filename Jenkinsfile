@@ -6,6 +6,7 @@ pipeline {
         dockerfile {
             filename '.devcontainer/Dockerfile'
             dir '.'
+            args  '--net="jenkins_default"' // required for accessing the Gitea server
         }
     }
     options {
@@ -14,7 +15,11 @@ pipeline {
         //newContainerPerStage()
     }
     parameters {
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Flag indicating if tests should be executed')
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Flag indicating if tests should be executed'
+        )
     }
     stages {
         stage('Cleanup') {

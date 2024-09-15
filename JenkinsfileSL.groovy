@@ -23,13 +23,11 @@ node {
         )
     }
     stage('Agent Setup') {
-        // https://www.jenkins.io/doc/book/pipeline/docker/
-        docker.withRegistry('http://registry.lan:5000') {
+        docker.withRegistry('http://gitea.lan:3000', 'gitea') {
             customImage = docker.build(
-                "jenkins-cplusplus:latest",
+                "root/jenkins-cplusplus:latest",
                 "-f .devcontainer/Dockerfile ./")
-            // Push custom image to the own registry
-            customImage.push()
+            customImage.push() // push custom image to the own registry
         }
     }
     customImage.inside {
