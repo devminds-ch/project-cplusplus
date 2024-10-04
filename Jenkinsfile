@@ -72,7 +72,7 @@ pipeline {
                     stage('Build project') {
                         steps {
                             sh "cmake --preset ${COMPILER}-release"
-                            sh "cmake --build --preset ${COMPILER}-release --target cplusplus_training_project"
+                            sh "cmake --preset ${COMPILER}-release --build --target cplusplus_training_project"
                             archiveArtifacts(
                                 artifacts: "build/${COMPILER}-release/bin/cplusplus_training_project",
                                 onlyIfSuccessful: true
@@ -82,7 +82,7 @@ pipeline {
                     stage('Build tests') {
                         steps {
                             sh "cmake --preset ${COMPILER}-coverage"
-                            sh "cmake --build --preset ${COMPILER}-coverage --target calculate_test"
+                            sh "cmake --preset ${COMPILER}-coverage --build --target calculate_test"
                             archiveArtifacts(
                                 artifacts: "build/${COMPILER}-coverage/bin/calculate_test",
                                 onlyIfSuccessful: true
