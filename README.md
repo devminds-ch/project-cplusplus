@@ -21,10 +21,13 @@ Subcommands:
 The C++ application is based on the following toolchain:
 
 * [CMake](https://cmake.org/) as build system
+* [doxygen](https://doxygen.ln/) for documentation
 * [GCC](https://gcc.gnu.org/) and [Clang](https://clang.llvm.org/) for compilation
 * [GoogleTest](https://github.com/google/googletest) for test creation and execution
 * [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) for code formatting
+* [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/) for static code analysis
 * [Cppcheck](https://cppcheck.sourceforge.io/) for static code analysis
+* [include-what-you-use](https://include-what-you-use.org/) for #include analysis
 * [gcovr](https://gcovr.com/en/stable/) for code coverage processing
 
 
@@ -33,15 +36,22 @@ The C++ application is based on the following toolchain:
 ```
 ├── build       Reserved folder for build artifacts
 ├── cmake       Custom CMake files
-├── docs        Documentation folder
+├── docs        Doxygen documentation
 ├── external    3rdparty libraries as Git submodules
-├── src         Source code
-├── tests       Tests
+├── src         C++ source code
+├── tests       GoogleTest tests
 └── tools       Scripts
 ```
 
 
 ## Build and test instructions
+
+Build the doxygen documentation:
+
+```bash
+cd docs
+doxygen
+```
 
 Execute static code analysis:
 

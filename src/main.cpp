@@ -5,6 +5,12 @@
 #include "CLI/Formatter.hpp"
 #include "lib/calculate.hpp"
 
+/**
+ * Main function.
+ * The entry point to the CLI application.
+ * @param argc Number of command line arguments.
+ * @param argv Array of command line arguments.
+ */
 int main(int argc, char* argv[]) {
     // Parse CLI arguments using https://github.com/CLIUtils/CLI11
     CLI::App app{"C++ Training Project"};
