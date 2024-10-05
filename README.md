@@ -60,6 +60,12 @@ Execute static code analysis:
 cppcheck src/ --xml --xml-version=2 2> cppcheck.xml
 ```
 
+**IMPORTANT:** the following tools are automatically executed using CMake during project compilation:
+
+* [include-what-you-use](https://include-what-you-use.org/)
+* [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)
+* [Cppcheck](https://cppcheck.sourceforge.io/)
+
 
 ### Instructions for GCC
 
@@ -67,14 +73,14 @@ Build the application `release` config:
 
 ```bash
 cmake --preset gcc-release
-cmake --preset gcc-release --build --target cplusplus_training_project
+cmake --build --preset gcc-release --target cplusplus_training_project
 ```
 
 Build the tests for code coverage analysis:
 
 ```bash
 cmake --preset gcc-coverage
-cmake --preset gcc-coverage --build --target calculate_test
+cmake --build --preset gcc-coverage --target calculate_test
 ```
 
 Execute the tests:
@@ -103,7 +109,7 @@ Build the application `release` config:
 
 ```bash
 cmake --preset clang-release
-cmake --preset clang-release --build --target cplusplus_training_project
+cmake --build --preset clang-release --target cplusplus_training_project
 ```
 
 
@@ -111,7 +117,7 @@ Build the tests for code coverage analysis:
 
 ```bash
 cmake --preset clang-coverage
-cmake --preset clang-coverage --build --target calculate_test
+cmake --build --preset clang-coverage --target calculate_test
 ```
 
 Execute the tests:
