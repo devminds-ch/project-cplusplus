@@ -11,16 +11,16 @@
  * @param argc Number of command line arguments.
  * @param argv Array of command line arguments.
  */
-int main(int argc, char* argv[]) {
+auto main(int argc, char* argv[]) -> int {
     // Parse CLI arguments using https://github.com/CLIUtils/CLI11
     CLI::App app{"C++ Training Project"};
     argv = app.ensure_utf8(argv);
     app.require_subcommand(1);
 
-    auto sum = app.add_subcommand("sum", "Sum two doubles");
-    double a;
+    auto* sum = app.add_subcommand("sum", "Sum two doubles");
+    double a = 0;
     sum->add_option("a", a, "First number")->required();
-    double b;
+    double b = 0;
     sum->add_option("b", b, "Second number")->required();
     sum->callback([&]() {
         std::cout << "Sum of " << a << " and " << b << " is "

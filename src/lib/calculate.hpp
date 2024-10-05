@@ -10,7 +10,7 @@ class Calculate {
      * @param b The second floating point number.
      * @return The sum of the two floating point numbers.
      */
-    static double sum(const double &a, const double &b);
+    static auto sum(const double &a, const double &b) -> double;
 
     // TODO: add more functions here
 };
