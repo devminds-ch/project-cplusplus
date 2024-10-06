@@ -23,6 +23,23 @@ node {
         stage('Cleanup') {
             sh 'rm -rf build'
         }
+        stage('Build documentation') {
+            sh 'mkdir -p build/docs && cd docs && doxygen'
+            archiveArtifacts(
+                artifacts: 'build/docs/html/**',
+                onlyIfSuccessful: true
+            )
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: false,
+                reportDir: 'build/docs/html/',
+                reportFiles: 'index.html',
+                reportName: 'Documentation',
+                reportTitles: '',
+                useWrapperFileDirectly: true
+            ])
+        }
         stage('Static code analysis') {
             warnError('clang-format issues found') {
                 sh './tools/clang-format.sh'
@@ -37,7 +54,6 @@ node {
                         lowTags: 'HACK',
                         normalTags: 'TODO'
                     ),
-                    gcc(),
                     cppCheck(pattern: 'cppcheck.xml')
                 ]
             )
@@ -53,6 +69,12 @@ node {
                         archiveArtifacts(
                             artifacts: "build/${c}-release/bin/cplusplus_training_project",
                             onlyIfSuccessful: true
+                        )
+                        recordIssues(
+                            sourceCodeRetention: 'LAST_BUILD',
+                            tools: [
+                                "${c}"() // use dynamic method invocation
+                            ]
                         )
                     }
                     stage("Build tests [${c}]") {

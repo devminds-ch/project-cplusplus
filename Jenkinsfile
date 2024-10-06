@@ -39,6 +39,25 @@ pipeline {
                 )
             }
         }
+        stage('Build documentation') {
+            steps {
+                sh 'mkdir -p build/docs && cd docs && doxygen'
+                archiveArtifacts(
+                    artifacts: 'build/docs/html/**',
+                    onlyIfSuccessful: true
+                )
+                publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: false,
+                    reportDir: 'build/docs/html/',
+                    reportFiles: 'index.html',
+                    reportName: 'Documentation',
+                    reportTitles: '',
+                    useWrapperFileDirectly: true
+                ])
+            }
+        }
         stage('Static code analysis') {
             steps {
                 warnError('clang-format issues found') {
@@ -54,7 +73,6 @@ pipeline {
                             lowTags: 'HACK',
                             normalTags: 'TODO'
                         ),
-                        gcc(),
                         cppCheck(pattern: 'cppcheck.xml')
                     ]
                 )
@@ -72,17 +90,30 @@ pipeline {
                     stage('Build project') {
                         steps {
                             sh "cmake --preset ${COMPILER}-release"
-                            sh "cmake --preset ${COMPILER}-release --build --target cplusplus_training_project"
+                            sh "cmake --build --preset ${COMPILER}-release --target cplusplus_training_project"
                             archiveArtifacts(
                                 artifacts: "build/${COMPILER}-release/bin/cplusplus_training_project",
                                 onlyIfSuccessful: true
+                            )
+                            recordIssues(
+                                sourceCodeRetention: 'LAST_BUILD',
+                                tools: [
+                                    gcc(
+                                        id: "gcc-${COMPILER}",
+                                        name: "GCC [${COMPILER}]"
+                                    ),
+                                    clang(
+                                        id: "clang-${COMPILER}",
+                                        name: "Clang [${COMPILER}]"
+                                    )
+                                ]
                             )
                         }
                     }
                     stage('Build tests') {
                         steps {
                             sh "cmake --preset ${COMPILER}-coverage"
-                            sh "cmake --preset ${COMPILER}-coverage --build --target calculate_test"
+                            sh "cmake --build --preset ${COMPILER}-coverage --target calculate_test"
                             archiveArtifacts(
                                 artifacts: "build/${COMPILER}-coverage/bin/calculate_test",
                                 onlyIfSuccessful: true
