@@ -1,0 +1,63 @@
+name: Build and test the project
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".devcontainer/Dockerfile"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".devcontainer/Dockerfile"
+  workflow_dispatch:
+
+jobs:
+  build-doc:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build documentation
+        run: |
+          mkdir -p build/docs
+          cd docs
+          doxygen
+
+  build-app:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build application
+        run: |
+          cmake --preset ${{ matrix.compiler }}-release
+          cmake --build --preset ${{ matrix.compiler }}-release --target cplusplus_training_project
+
+  test-app:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build tests
+        run: |
+          cmake --preset ${{ matrix.compiler }}-coverage
+          cmake --build --preset ${{ matrix.compiler }}-coverage --target calculate_test
+      - name: Run tests
+        run: |
+          ./build/${{ matrix.compiler }}-coverage/calculate_test --gtest_output="xml:test-report-${{ matrix.compiler }}.xml"
+          gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-${{ matrix.compiler }}.xml"
+          gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-${{ matrix.compiler }}/index.html"
