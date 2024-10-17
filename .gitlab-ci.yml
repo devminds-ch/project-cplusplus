@@ -14,10 +14,7 @@ build-project:
   before_script:
     - git submodule update --init --recursive
   script:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make cplusplus_training_project
+    - ./tools/build-project.sh
   artifacts:
     paths:
       - build/bin
@@ -28,10 +25,7 @@ build-unit-tests:
   before_script:
     - git submodule update --init --recursive
   script:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make calculate_test
+    - ./tools/build-unit-tests.sh
   artifacts:
     paths:
       - build/
