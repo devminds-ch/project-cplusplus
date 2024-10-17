@@ -10,9 +10,9 @@ cd "$REPO_ROOT" || exit 1
 
 # Build the project
 mkdir -p build
-cd build || exit 1
-cmake ..
-make calculate_test
+cmake --version
+cmake --preset gcc-coverage
+cmake --build --preset gcc-coverage --target calculate_test
 
 # Restore the directory
 popd || exit 1
