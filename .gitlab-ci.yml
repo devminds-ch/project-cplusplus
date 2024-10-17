@@ -37,6 +37,18 @@ build-unit-tests:
       - build/
     expire_in: 1 week
 
+build-documentation:
+  stage: build
+  before_script:
+    - git submodule update --init --recursive
+    - apt update && apt install -y doxygen
+  script:
+    - ./tools/build-documentation.sh
+  artifacts:
+    paths:
+      - build/doc
+    expire_in: 1 week
+
 code_quality:
   when: manual
 
