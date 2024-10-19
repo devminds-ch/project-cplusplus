@@ -13,11 +13,15 @@ on:
       - ".devcontainer/Dockerfile"
   workflow_dispatch:
 
+# IMPORTANT:  make sure to use the 'runner user'when running jobs in a container!
+#             Otherwise there will be 'dubious ownership' issues reported by Git.
+#             Therefore, make sure to use the '--user 1001' option for the container.
 jobs:
   build-doc:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+      options: --user 1001
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,6 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+      options: --user 1001
     strategy:
       matrix:
         compiler: [gcc, clang]
@@ -48,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+      options: --user 1001
     strategy:
       matrix:
         compiler: [gcc, clang]
