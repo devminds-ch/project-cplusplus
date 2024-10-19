@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: "true"
       - name: Build application
         run: |
           cmake --preset ${{ matrix.compiler }}-release
@@ -52,6 +54,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: "true"
       - name: Build tests
         run: |
           cmake --preset ${{ matrix.compiler }}-coverage
