@@ -72,7 +72,7 @@ jobs:
       - name: Build tests
         run: ./tools/build-cmake-target.sh ${{ matrix.compiler }}-coverage calculate_test
       - name: Run tests
-        run: ./tools/run-tests.sh build/${{ matrix.compiler }}-coverage/calculate_test build/${{ matrix.compiler }}
+        run: ./tools/run-test.sh build/${{ matrix.compiler }}-coverage/bin/calculate_test build/${{ matrix.compiler }}
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
