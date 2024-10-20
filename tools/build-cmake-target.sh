@@ -17,6 +17,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 pushd "${REPO_ROOT}" 2>&1 > /dev/null
 
 mkdir -p build
+echo "Building target $2 with CMake preset $1..."
 cmake --preset "$1"
 cmake --build --preset "$1" --target "$2"
 
