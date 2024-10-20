@@ -19,7 +19,7 @@ pushd "${REPO_ROOT}" 2>&1 > /dev/null
 # Check if binary was compiled using clang - otherwise we assume GCC
 GCOV_EXECUTABLE=gcov
 if objdump --full-contents --section .comment $1 | grep -q "clang"; then
-    GCOV_EXECUTABLE=llvm-cov
+    GCOV_EXECUTABLE="llvm-cov gcov"
 fi
 
 mkdir -p "$2/html"
