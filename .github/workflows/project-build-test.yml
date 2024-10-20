@@ -51,10 +51,10 @@ jobs:
         run: ./tools/clang-format.sh
       - name: Build application
         run: |
-          ENABLE_IYWU=1
-          ENABLE_LWYU=1
-          ENABLE_CLANG_TIDY=1
-          ENABLE_CPPCHECK=1
+          export ENABLE_IWYU=1
+          export ENABLE_LWYU=1
+          export ENABLE_CLANG_TIDY=1
+          export ENABLE_CPPCHECK=1
           ./tools/build-cmake-target.sh ${{ matrix.compiler }}-release cplusplus_training_project
       - name: Upload application
         uses: actions/upload-artifact@v4
