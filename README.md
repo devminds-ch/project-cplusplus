@@ -28,6 +28,7 @@ The C++ application is based on the following toolchain:
 * [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/) for static code analysis
 * [Cppcheck](https://cppcheck.sourceforge.io/) for static code analysis
 * [include-what-you-use](https://include-what-you-use.org/) for #include analysis
+* [link-what-you-use](https://cmake.org/cmake/help/latest/prop_tgt/LINK_WHAT_YOU_USE.html) for linking analysis
 * [gcovr](https://gcovr.com/en/stable/) for code coverage processing
 
 
@@ -68,11 +69,12 @@ Run clang-format:
 
 ### Run static code analysis
 
-**IMPORTANT:** the following tools are automatically executed using CMake during project compilation:
+The following tools are integrated into CMake and can be enabled by defining a corresponding environment variable:
 
-* [include-what-you-use](https://include-what-you-use.org/)
-* [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)
-* [Cppcheck](https://cppcheck.sourceforge.io/)
+* Enable [include-what-you-use](https://include-what-you-use.org/) by defining `ENABLE_IWYU=1`
+* Enable [link-what-you-use](https://cmake.org/cmake/help/latest/prop_tgt/LINK_WHAT_YOU_USE.html) by defining `ENABLE_LWYU=1`
+* Enable [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/) by defining `ENABLE_CLANG_TIDY=1`
+* Enable [Cppcheck](https://cppcheck.sourceforge.io/) by defining `ENABLE_CPPCHECK=1`
 
 If Cppcheck should be executed manually, run the following:
 
@@ -100,7 +102,7 @@ Execute the tests:
 ./tools/run-test.sh build/gcc-coverage/bin/calculate_test build/gcc
 ```
 
-Executing the tests will create the following artifacts:
+Executing the GCC tests will create the following artifacts:
 
 * `build/gcc/test-report.xml`: test results in Junit XML format
 * `build/gcc/test-coverage.xml`: code coverage report in Cobertura XML format
@@ -128,7 +130,7 @@ Execute the tests:
 ./tools/run-test.sh build/clang-coverage/bin/calculate_test build/clang
 ```
 
-Executing the tests will create the following artifacts:
+Executing the Clang tests will create the following artifacts:
 
 * `build/clang/test-report.xml`: test results in Junit XML format
 * `build/clang/test-coverage.xml`: code coverage report in Cobertura XML format

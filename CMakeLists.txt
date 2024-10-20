@@ -16,25 +16,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable include-what-you-use (IWYU) if available
 find_program(IWYU_PATH NAMES include-what-you-use)
-if (IWYU_PATH)
+if (IWYU_PATH AND DEFINED ENV{ENABLE_IWYU})
   message(STATUS "Enabling: include-what-you-use")
   set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE "${IWYU_PATH}")
 endif()
 
-# Enable link-what-you-use (LWYU)
-message(STATUS "Enabling: link-what-you-use")
-set(CMAKE_LINK_WHAT_YOU_USE TRUE)
+if(DEFINED ENV{ENABLE_LWYU})
+  # Enable link-what-you-use (LWYU)
+  message(STATUS "Enabling: link-what-you-use")
+  set(CMAKE_LINK_WHAT_YOU_USE TRUE)
+endif()
 
 # Enable cppcheck if available
 find_program(CPPCHECK_PATH NAMES cppcheck)
-if (CPPCHECK_PATH)
+if (CPPCHECK_PATH AND DEFINED ENV{ENABLE_CPPCHECK})
   message(STATUS "Enabling: cppcheck")
   set(CMAKE_CXX_CPPCHECK "${CPPCHECK_PATH}")
 endif()
 
 # Enable clang-tidy if available
 find_program(CLANG_TIDY_PATH NAMES clang-tidy)
-if (CLANG_TIDY_PATH)
+if (CLANG_TIDY_PATH AND DEFINED ENV{ENABLE_CLANG_TIDY})
   message(STATUS "Enabling: clang-tidy")
   set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_PATH}")
 endif()
