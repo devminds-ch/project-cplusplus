@@ -35,16 +35,16 @@ node {
             sh 'rm -rf build'
         }
         stage('Build documentation') {
-            sh 'mkdir -p build/docs && cd docs && doxygen'
+            sh './tools/build-docs.sh'
             archiveArtifacts(
-                artifacts: 'build/docs/html/**',
+                artifacts: 'build/html/**',
                 onlyIfSuccessful: true
             )
             publishHTML([
                 allowMissing: false,
                 alwaysLinkToLastBuild: false,
                 keepAll: false,
-                reportDir: 'build/docs/html/',
+                reportDir: 'build/html/',
                 reportFiles: 'index.html',
                 reportName: 'Documentation',
                 reportTitles: '',

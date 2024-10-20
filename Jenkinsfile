@@ -41,16 +41,16 @@ pipeline {
         }
         stage('Build documentation') {
             steps {
-                sh 'mkdir -p build/docs && cd docs && doxygen'
+                sh './tools/build-docs.sh'
                 archiveArtifacts(
-                    artifacts: 'build/docs/html/**',
+                    artifacts: 'build/html/**',
                     onlyIfSuccessful: true
                 )
                 publishHTML([
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
                     keepAll: false,
-                    reportDir: 'build/docs/html/',
+                    reportDir: 'build/html/',
                     reportFiles: 'index.html',
                     reportName: 'Documentation',
                     reportTitles: '',
@@ -89,8 +89,7 @@ pipeline {
                 stages {
                     stage('Build project') {
                         steps {
-                            sh "cmake --preset ${COMPILER}-release"
-                            sh "cmake --build --preset ${COMPILER}-release --target cplusplus_training_project"
+                            sh "./tools/build-cmake-target.sh ${COMPILER}-release cplusplus_training_project"
                             archiveArtifacts(
                                 artifacts: "build/${COMPILER}-release/bin/cplusplus_training_project",
                                 onlyIfSuccessful: true
@@ -112,8 +111,7 @@ pipeline {
                     }
                     stage('Build tests') {
                         steps {
-                            sh "cmake --preset ${COMPILER}-coverage"
-                            sh "cmake --build --preset ${COMPILER}-coverage --target calculate_test"
+                            sh "./tools/build-cmake-target.sh ${COMPILER}-coverage calculate_test"
                             archiveArtifacts(
                                 artifacts: "build/${COMPILER}-coverage/bin/calculate_test",
                                 onlyIfSuccessful: true
@@ -133,28 +131,23 @@ pipeline {
             parallel {
                 stage('Run tests [gcc]') {
                     steps {
-                        sh './build/gcc-coverage/bin/calculate_test --gtest_output="xml:test-report-gcc.xml"'
+                        sh './tools/run-tests.sh build/gcc-coverage/bin/calculate_test build/gcc'
                         junit(
-                            testResults: 'test-report-gcc.xml'
+                            testResults: 'gcc/test-report.xml'
                         )
-                        // Create Cobertura coverage report
-                        sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-gcc.xml"'
                         recordCoverage(
                             name: 'GCC Coverage',
                             id: 'gcc-coverage',
                             tools: [
-                                [parser: 'JUNIT', pattern: 'report-gcc.xml'],
-                                [parser: 'COBERTURA', pattern: 'coverage-gcc.xml']
+                                [parser: 'JUNIT', pattern: 'gcc/test-report.xml'],
+                                [parser: 'COBERTURA', pattern: 'gcc/test-coverage.xml']
                             ]
                         )
-                        // Create HTML coverage report
-                        sh 'mkdir -p build/gcov-html-gcc'
-                        sh 'gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-gcc/index.html"'
                         publishHTML([
                             allowMissing: false,
                             alwaysLinkToLastBuild: false,
                             keepAll: false,
-                            reportDir: 'build/gcov-html-gcc',
+                            reportDir: 'build/gcc/html',
                             reportFiles: 'index.html',
                             reportName: 'GCC Coverage HTML',
                             reportTitles: '',
@@ -164,28 +157,23 @@ pipeline {
                 }
                 stage('Run tests [clang]') {
                     steps {
-                        sh './build/clang-coverage/bin/calculate_test --gtest_output="xml:test-report-clang.xml"'
+                        sh './tools/run-tests.sh build/clang-coverage/bin/calculate_test build/clang'
                         junit(
-                            testResults: 'test-report-clang.xml'
+                            testResults: 'clang/test-report.xml'
                         )
-                        // Create Cobertura coverage report
-                        sh 'gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-clang.xml"'
                         recordCoverage(
                             name: 'Clang Coverage',
                             id: 'clang-coverage',
                             tools: [
-                                [parser: 'JUNIT', pattern: 'report-clang.xml'],
-                                [parser: 'COBERTURA', pattern: 'coverage-clang.xml']
+                                [parser: 'JUNIT', pattern: 'clang/test-report.xml'],
+                                [parser: 'COBERTURA', pattern: 'clang/test-coverage.xml']
                             ]
                         )
-                        // Create HTML coverage report
-                        sh 'mkdir -p build/gcov-html-clang'
-                        sh 'gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-clang/index.html"'
                         publishHTML([
                             allowMissing: false,
                             alwaysLinkToLastBuild: false,
                             keepAll: false,
-                            reportDir: 'build/gcov-html-clang',
+                            reportDir: 'build/clang/html',
                             reportFiles: 'index.html',
                             reportName: 'Clang Coverage HTML',
                             reportTitles: '',

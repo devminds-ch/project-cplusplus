@@ -46,19 +46,27 @@ The C++ application is based on the following toolchain:
 
 ## Build and test instructions
 
+All steps required to build or test the application are wrapped in separate shell scripts.
+
+Check the content of the corresponding scripts for details.
+
+### Build documentation
+
 Build the doxygen documentation:
 
 ```bash
-cd docs
-doxygen
+./tools/build-docs.sh
 ```
 
-Execute static code analysis:
+### Run clang-format
+
+Run clang-format:
 
 ```bash
 ./tools/clang-format.sh
-cppcheck src/ --xml --xml-version=2 2> cppcheck.xml
 ```
+
+### Run static code analysis
 
 **IMPORTANT:** the following tools are automatically executed using CMake during project compilation:
 
@@ -66,75 +74,62 @@ cppcheck src/ --xml --xml-version=2 2> cppcheck.xml
 * [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)
 * [Cppcheck](https://cppcheck.sourceforge.io/)
 
+If Cppcheck should be executed manually, run the following:
+
+```bash
+cppcheck src/ --xml --xml-version=2 2> cppcheck.xml
+```
 
 ### Instructions for GCC
 
 Build the application `release` config:
 
 ```bash
-cmake --preset gcc-release
-cmake --build --preset gcc-release --target cplusplus_training_project
+./tools/build-cmake-target.sh gcc-release cplusplus_training_project
 ```
 
 Build the tests for code coverage analysis:
 
 ```bash
-cmake --preset gcc-coverage
-cmake --build --preset gcc-coverage --target calculate_test
+./tools/build-cmake-target.sh gcc-coverage calculate_test
 ```
 
 Execute the tests:
 
 ```bash
-./build/gcc-coverage/bin/calculate_test --gtest_output="xml:test-report-gcc.xml"
+./tools/run-test.sh build/gcc-coverage/bin/calculate_test build/gcc
 ```
 
-Convert the code coverage to Cobertura format:
+Executing the tests will create the following artifacts:
 
-```bash
-gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-gcc.xml"
-```
-
-Create an HTML report of the code coverage:
-
-```bash
-mkdir -p build/gcov-html-gcc
-gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-gcc/index.html"
-```
+* `build/gcc/test-report.xml`: test results in Junit XML format
+* `build/gcc/test-coverage.xml`: code coverage report in Cobertura XML format
+* `build/gcc/html/index.html`: HTML report of code coverage from gcovr
 
 
 ### Instructions for Clang
 
+
 Build the application `release` config:
 
 ```bash
-cmake --preset clang-release
-cmake --build --preset clang-release --target cplusplus_training_project
+./tools/build-cmake-target.sh clang-release cplusplus_training_project
 ```
-
 
 Build the tests for code coverage analysis:
 
 ```bash
-cmake --preset clang-coverage
-cmake --build --preset clang-coverage --target calculate_test
+./tools/build-cmake-target.sh clang-coverage calculate_test
 ```
 
 Execute the tests:
 
 ```bash
-./build/clang-coverage/bin/calculate_test --gtest_output="xml:test-report-clang.xml"
+./tools/run-test.sh build/clang-coverage/bin/calculate_test build/clang
 ```
 
-Convert the code coverage to Cobertura format:
+Executing the tests will create the following artifacts:
 
-```bash
-gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-clang.xml"
-```
-
-Create an HTML report of the code coverage:
-
-```bash
-mkdir -p build/gcov-html-clang
-gcovr --gcov-executable "llvm-cov gcov" -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-clang/index.html"
-```
+* `build/clang/test-report.xml`: test results in Junit XML format
+* `build/clang/test-coverage.xml`: code coverage report in Cobertura XML format
+* `build/clang/html/index.html`: HTML report of code coverage from gcovr

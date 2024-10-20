@@ -26,10 +26,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Build documentation
-        run: |
-          mkdir -p build/docs
-          cd docs
-          doxygen
+        run: ./tools/build-docs.sh
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: "build/html"
+          retention-days: 1
 
   build-app:
     runs-on: ubuntu-latest
@@ -45,9 +48,13 @@ jobs:
         with:
           submodules: "true"
       - name: Build application
-        run: |
-          cmake --preset ${{ matrix.compiler }}-release
-          cmake --build --preset ${{ matrix.compiler }}-release --target cplusplus_training_project
+        run: ./tools/build-cmake-target.sh ${{ matrix.compiler }}-release cplusplus_training_project
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-${{ matrix.compiler }}
+          path: "build/${{ matrix.compiler }}-release/bin/cplusplus_training_project"
+          retention-days: 1
 
   test-app:
     runs-on: ubuntu-latest
@@ -63,11 +70,12 @@ jobs:
         with:
           submodules: "true"
       - name: Build tests
-        run: |
-          cmake --preset ${{ matrix.compiler }}-coverage
-          cmake --build --preset ${{ matrix.compiler }}-coverage --target calculate_test
+        run: ./tools/build-cmake-target.sh ${{ matrix.compiler }}-coverage calculate_test
       - name: Run tests
-        run: |
-          ./build/${{ matrix.compiler }}-coverage/calculate_test --gtest_output="xml:test-report-${{ matrix.compiler }}.xml"
-          gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-${{ matrix.compiler }}.xml"
-          gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-${{ matrix.compiler }}/index.html"
+        run: ./tools/run-tests.sh build/${{ matrix.compiler }}-coverage/calculate_test build/${{ matrix.compiler }}
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.compiler }}
+          path: "build/${{ matrix.compiler }}/*.xml"
+          retention-days: 1
