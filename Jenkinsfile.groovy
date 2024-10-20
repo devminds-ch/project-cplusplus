@@ -93,17 +93,17 @@ node {
             compilers.each { c ->
                 tests[c] = {
                     stage("Run tests [${c}]") {
-                        sh "./tools/run-tests.sh build/${c}-coverage/bin/calculate_test build/${c}"
+                        sh "./tools/run-test.sh build/${c}-coverage/bin/calculate_test build/${c}"
                         junit(
-                            testResults: "${c}/test-report.xml"
+                            testResults: "build/${c}/test-report.xml"
                         )
                         def coverage_name = c == 'gcc' ? 'GCC' : 'Clang'
                         recordCoverage(
                             name: "${coverage_name} Coverage",
                             id: "${c}-coverage",
                             tools: [
-                                [parser: 'JUNIT', pattern: "${c}/test-report.xml"],
-                                [parser: 'COBERTURA', pattern: "${c}/test-coverage.xml"]
+                                [parser: 'JUNIT', pattern: "build/${c}/test-report.xml"],
+                                [parser: 'COBERTURA', pattern: "build/${c}/test-coverage.xml"]
                             ]
                         )
                         publishHTML([
