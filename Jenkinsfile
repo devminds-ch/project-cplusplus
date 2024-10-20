@@ -131,16 +131,16 @@ pipeline {
             parallel {
                 stage('Run tests [gcc]') {
                     steps {
-                        sh './tools/run-tests.sh build/gcc-coverage/bin/calculate_test build/gcc'
+                        sh './tools/run-test.sh build/gcc-coverage/bin/calculate_test build/gcc'
                         junit(
-                            testResults: 'gcc/test-report.xml'
+                            testResults: 'build/gcc/test-report.xml'
                         )
                         recordCoverage(
                             name: 'GCC Coverage',
                             id: 'gcc-coverage',
                             tools: [
-                                [parser: 'JUNIT', pattern: 'gcc/test-report.xml'],
-                                [parser: 'COBERTURA', pattern: 'gcc/test-coverage.xml']
+                                [parser: 'JUNIT', pattern: 'build/gcc/test-report.xml'],
+                                [parser: 'COBERTURA', pattern: 'build/gcc/test-coverage.xml']
                             ]
                         )
                         publishHTML([
@@ -157,16 +157,16 @@ pipeline {
                 }
                 stage('Run tests [clang]') {
                     steps {
-                        sh './tools/run-tests.sh build/clang-coverage/bin/calculate_test build/clang'
+                        sh './tools/run-test.sh build/clang-coverage/bin/calculate_test build/clang'
                         junit(
-                            testResults: 'clang/test-report.xml'
+                            testResults: 'build/clang/test-report.xml'
                         )
                         recordCoverage(
                             name: 'Clang Coverage',
                             id: 'clang-coverage',
                             tools: [
-                                [parser: 'JUNIT', pattern: 'clang/test-report.xml'],
-                                [parser: 'COBERTURA', pattern: 'clang/test-coverage.xml']
+                                [parser: 'JUNIT', pattern: 'build/clang/test-report.xml'],
+                                [parser: 'COBERTURA', pattern: 'build/clang/test-coverage.xml']
                             ]
                         )
                         publishHTML([
