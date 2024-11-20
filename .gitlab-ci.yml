@@ -15,7 +15,7 @@ build-project:
   before_script:
     - git submodule update --init --recursive
   script:
-    - ./tools/build-project.sh
+    - ./tools/build-cmake-target.sh gcc-release cplusplus_training_project
   artifacts:
     paths:
       - build/bin
@@ -26,7 +26,7 @@ build-unit-tests:
   before_script:
     - git submodule update --init --recursive
   script:
-    - ./tools/build-unit-tests.sh
+    - ./tools/build-cmake-target.sh gcc-coverage calculate_test
   artifacts:
     paths:
       - build/
