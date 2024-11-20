@@ -38,10 +38,10 @@ build-documentation:
     - git submodule update --init --recursive
     - apt update && apt install -y doxygen
   script:
-    - ./tools/build-documentation.sh
+    - ./tools/build-docs.sh
   artifacts:
     paths:
-      - build/docs
+      - build/html/
     expire_in: 1 week
 
 code_quality:
@@ -68,7 +68,7 @@ run-unit-tests:
 pages:
   stage: deploy
   script:
-    - mv build/docs/ public/
+    - mv build/html/ public/
   artifacts:
     paths:
       - public/
