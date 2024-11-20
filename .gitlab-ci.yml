@@ -5,6 +5,7 @@ default:
 stages:
   - build
   - test
+  - deploy
 
 include:
    - template: Jobs/Code-Quality.gitlab-ci.yml
@@ -40,7 +41,7 @@ build-documentation:
     - ./tools/build-documentation.sh
   artifacts:
     paths:
-      - build/doc
+      - build/docs
     expire_in: 1 week
 
 code_quality:
@@ -63,3 +64,11 @@ run-unit-tests:
       coverage_report:
         coverage_format: cobertura
         path: coverage-gcc.xml
+
+pages:
+  stage: deploy
+  script:
+    - mv build/docs/ public/
+  artifacts:
+    paths:
+      - public/
