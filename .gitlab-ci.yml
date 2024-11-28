@@ -9,6 +9,7 @@ stages:
 
 include:
    - template: Jobs/Code-Quality.gitlab-ci.yml
+   - component: $CI_SERVER_FQDN/devminds-ch/gitlab-component-clang-format/gitlab-component-clang-format@1.0.1
 
 build-project:
   stage: build
