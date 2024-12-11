@@ -1,6 +1,6 @@
 # C++ Training Project by [devminds GmbH](https://devminds.ch)
 
-This C++ Project is used for DevOps CI/CD trainings.
+This C++ project is used for DevOps CI/CD trainings.
 
 The project contains an application providing a CLI to calculate the sum of two numbers:
 
