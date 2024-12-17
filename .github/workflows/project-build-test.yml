@@ -20,7 +20,7 @@ jobs:
   build-doc:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
       options: --user 1001
     steps:
       - name: Checkout code
@@ -37,7 +37,7 @@ jobs:
   build-app:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
       options: --user 1001
     strategy:
       matrix:
@@ -66,7 +66,7 @@ jobs:
   test-app:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository_owner }}/project-cplusplus:latest
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
       options: --user 1001
     strategy:
       matrix:
