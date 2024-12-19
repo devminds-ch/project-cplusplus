@@ -52,18 +52,15 @@ run-unit-tests:
   before_script:
     - apt update && apt install -y gcovr
   script:
-    - ./build/gcc-coverage/bin/calculate_test --gtest_output="xml:test-report-gcc.xml"
-    - gcovr -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "coverage-gcc.xml"
-    - mkdir -p build/gcov-html-gcc
-    - gcovr -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "build/gcov-html-gcc/index.html"
+    - ./tools/run-test.sh build/gcc-coverage/bin/calculate_test build/gcc
   coverage: /^\s*lines:\s*\d+.\d+\%/
   artifacts:
     expire_in: 1 week
     reports:
-      junit: test-report-gcc.xml
+      junit: build/gcc/test-report.xml
       coverage_report:
         coverage_format: cobertura
-        path: coverage-gcc.xml
+        path: build/gcc/test-coverage.xml
 
 pages:
   stage: deploy
