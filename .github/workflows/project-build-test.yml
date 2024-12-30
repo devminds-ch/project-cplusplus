@@ -1,0 +1,88 @@
+name: Build and test the project
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".devcontainer/Dockerfile"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".devcontainer/Dockerfile"
+  workflow_dispatch:
+
+# IMPORTANT:  make sure to use the 'runner user'when running jobs in a container!
+#             Otherwise there will be 'dubious ownership' issues reported by Git.
+#             Therefore, make sure to use the '--user 1001' option for the container.
+jobs:
+  build-doc:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+      options: --user 1001
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build documentation
+        run: ./tools/build-docs.sh
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: "build/html"
+          retention-days: 1
+
+  build-app:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+      options: --user 1001
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+      - name: Run clang-format
+        run: ./tools/clang-format.sh
+      - name: Build application
+        run: |
+          export ENABLE_IWYU=1
+          export ENABLE_LWYU=1
+          export ENABLE_CLANG_TIDY=1
+          export ENABLE_CPPCHECK=1
+          ./tools/build-cmake-target.sh ${{ matrix.compiler }}-release cplusplus_training_project
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-${{ matrix.compiler }}
+          path: "build/${{ matrix.compiler }}-release/bin/cplusplus_training_project"
+          retention-days: 1
+
+  test-app:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+      options: --user 1001
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+      - name: Build tests
+        run: ./tools/build-cmake-target.sh ${{ matrix.compiler }}-coverage calculate_test
+      - name: Run tests
+        run: ./tools/run-test.sh build/${{ matrix.compiler }}-coverage/bin/calculate_test build/${{ matrix.compiler }}
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.compiler }}
+          path: "build/${{ matrix.compiler }}/*.xml"
+          retention-days: 1
