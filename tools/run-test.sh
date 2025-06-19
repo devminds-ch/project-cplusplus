@@ -23,13 +23,29 @@ if objdump --full-contents --section .comment $1 | grep -q "clang"; then
 fi
 
 mkdir -p "$2/html"
+
+STATUS=0
+set +e
+
 echo "Running tests..."
 ./$1 --gtest_output="xml:$2/test-report.xml"
+if [ $? -ne 0 ]; then
+    STATUS=1
+fi
+
 echo "Creating Cobertura coverage report..."
 gcovr --gcov-executable "${GCOV_EXECUTABLE}" -f src . --root ./ --exclude-unreachable-branches --xml-pretty --print-summary -o "$2/test-coverage.xml"
+if [ $? -ne 0 ]; then
+    STATUS=1
+fi
+
 echo "Creating HTML coverage report..."
 gcovr --gcov-executable "${GCOV_EXECUTABLE}" -f src . --root ./ --exclude-unreachable-branches --html --html-details -o "$2/html/index.html"
+if [ $? -ne 0 ]; then
+    STATUS=1
+fi
 
+set -e
 popd 2>&1 > /dev/null
 
 exit $STATUS
