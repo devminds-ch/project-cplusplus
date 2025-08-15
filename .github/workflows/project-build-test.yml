@@ -24,7 +24,7 @@ jobs:
       options: --user 1001
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Build documentation
         run: ./tools/build-docs.sh
       - name: Upload documentation
@@ -44,7 +44,7 @@ jobs:
         compiler: [gcc, clang]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: "true"
       - name: Run clang-format
@@ -73,7 +73,7 @@ jobs:
         compiler: [gcc, clang]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: "true"
       - name: Build tests
