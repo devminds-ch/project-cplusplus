@@ -28,7 +28,7 @@ jobs:
       - name: Build documentation
         run: ./tools/build-docs.sh
       - name: Upload documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: documentation
           path: "build/html"
@@ -57,7 +57,7 @@ jobs:
           export ENABLE_CPPCHECK=1
           ./tools/build-cmake-target.sh ${{ matrix.compiler }}-release cplusplus_training_project
       - name: Upload application
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: application-${{ matrix.compiler }}
           path: "build/${{ matrix.compiler }}-release/bin/cplusplus_training_project"
@@ -81,7 +81,7 @@ jobs:
       - name: Run tests
         run: ./tools/run-test.sh build/${{ matrix.compiler }}-coverage/bin/calculate_test build/${{ matrix.compiler }}
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-results-${{ matrix.compiler }}
           path: "build/${{ matrix.compiler }}/*.xml"
