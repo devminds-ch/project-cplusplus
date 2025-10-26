@@ -1,5 +1,5 @@
 # https://github.com/devcontainers/images/tree/main/src/cpp
-FROM mcr.microsoft.com/devcontainers/cpp:1-debian-12
+FROM mcr.microsoft.com/devcontainers/cpp:2-debian-12
 
 # Install additional packages
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
