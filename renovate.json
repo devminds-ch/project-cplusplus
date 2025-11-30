@@ -16,6 +16,12 @@
       "matchManagers": [
         "github-actions"
       ]
+    },
+    {
+      "matchManagers": [
+        "git-submodules"
+      ],
+      "automerge": true
     }
   ]
 }
