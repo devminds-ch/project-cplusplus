@@ -1,10 +1,10 @@
 # C++ Training Project by [devminds GmbH](https://devminds.ch)
 
-This C++ project is used for DevOps CI/CD trainings.
+This C++ project is used for trainings offered by devminds GmbH.
 
 The project contains an application providing a CLI to calculate the sum of two numbers:
 
-```bash
+```
 C++ Training Project
 Usage: ./cplusplus_training_project [OPTIONS] SUBCOMMAND
 
