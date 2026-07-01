@@ -14,7 +14,7 @@ jobs:
       image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Required to avoid 'dubious ownership' errors when running Git commands within the container
       - name: Add GitHub workspace as Git safe directory within container
@@ -27,7 +27,7 @@ jobs:
         run: ./tools/build-docs.sh
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: documentation
           path: "build/html"
@@ -42,7 +42,7 @@ jobs:
         compiler: [gcc, clang]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: "true"
 
@@ -65,7 +65,7 @@ jobs:
           ./tools/build-cmake-target.sh ${{ matrix.compiler }}-release cplusplus_training_project
 
       - name: Upload application
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: application-${{ matrix.compiler }}
           path: "build/${{ matrix.compiler }}-release/bin/cplusplus_training_project"
@@ -80,7 +80,7 @@ jobs:
         compiler: [gcc, clang]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: "true"
 
@@ -98,7 +98,7 @@ jobs:
         run: ./tools/run-test.sh build/${{ matrix.compiler }}-coverage/bin/calculate_test build/${{ matrix.compiler }}
 
       - name: Upload test results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.compiler }}
           path: "build/${{ matrix.compiler }}/*.xml"
