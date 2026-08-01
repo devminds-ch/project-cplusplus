@@ -11,7 +11,7 @@ jobs:
   build-doc:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
+      image: mcr.microsoft.com/devcontainers/cpp:3.0-trixie
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -36,7 +36,7 @@ jobs:
   build-app:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
+      image: mcr.microsoft.com/devcontainers/cpp:3.0-trixie
     strategy:
       matrix:
         compiler: [gcc, clang]
@@ -74,7 +74,7 @@ jobs:
   test-app:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
+      image: mcr.microsoft.com/devcontainers/cpp:3.0-trixie
     strategy:
       matrix:
         compiler: [gcc, clang]
