@@ -11,7 +11,7 @@ jobs:
   build-doc:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie@sha256:8eaa3e4cf45fc14f2e1c6b5e668813168a42538716ce0b96e4752bf86fc1268f
+      image: mcr.microsoft.com/devcontainers/cpp:3.0-trixie@sha256:504cf3a779c559c4941fbe91cec5bc3b3714bc349f81a50aaeec9eab4b8c2b98
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -36,7 +36,7 @@ jobs:
   build-app:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie@sha256:8eaa3e4cf45fc14f2e1c6b5e668813168a42538716ce0b96e4752bf86fc1268f
+      image: mcr.microsoft.com/devcontainers/cpp:3.0-trixie@sha256:504cf3a779c559c4941fbe91cec5bc3b3714bc349f81a50aaeec9eab4b8c2b98
     strategy:
       matrix:
         compiler: [gcc, clang]
@@ -74,7 +74,7 @@ jobs:
   test-app:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie@sha256:8eaa3e4cf45fc14f2e1c6b5e668813168a42538716ce0b96e4752bf86fc1268f
+      image: mcr.microsoft.com/devcontainers/cpp:3.0-trixie@sha256:504cf3a779c559c4941fbe91cec5bc3b3714bc349f81a50aaeec9eab4b8c2b98
     strategy:
       matrix:
         compiler: [gcc, clang]
