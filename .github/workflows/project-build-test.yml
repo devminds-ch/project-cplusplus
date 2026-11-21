@@ -11,10 +11,10 @@ jobs:
   build-doc:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
+      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie@sha256:8eaa3e4cf45fc14f2e1c6b5e668813168a42538716ce0b96e4752bf86fc1268f
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # Required to avoid 'dubious ownership' errors when running Git commands within the container
       - name: Add GitHub workspace as Git safe directory within container
@@ -27,7 +27,7 @@ jobs:
         run: ./tools/build-docs.sh
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: documentation
           path: "build/html"
@@ -36,13 +36,13 @@ jobs:
   build-app:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
+      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie@sha256:8eaa3e4cf45fc14f2e1c6b5e668813168a42538716ce0b96e4752bf86fc1268f
     strategy:
       matrix:
         compiler: [gcc, clang]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: "true"
 
@@ -65,7 +65,7 @@ jobs:
           ./tools/build-cmake-target.sh ${{ matrix.compiler }}-release cplusplus_training_project
 
       - name: Upload application
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: application-${{ matrix.compiler }}
           path: "build/${{ matrix.compiler }}-release/bin/cplusplus_training_project"
@@ -74,13 +74,13 @@ jobs:
   test-app:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie
+      image: mcr.microsoft.com/devcontainers/cpp:2.1-trixie@sha256:8eaa3e4cf45fc14f2e1c6b5e668813168a42538716ce0b96e4752bf86fc1268f
     strategy:
       matrix:
         compiler: [gcc, clang]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: "true"
 
@@ -98,7 +98,7 @@ jobs:
         run: ./tools/run-test.sh build/${{ matrix.compiler }}-coverage/bin/calculate_test build/${{ matrix.compiler }}
 
       - name: Upload test results
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: test-results-${{ matrix.compiler }}
           path: "build/${{ matrix.compiler }}/*.xml"
